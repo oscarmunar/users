@@ -2,7 +2,10 @@ package com.users.service;
 
 import com.users.entity.UserEntity;
 import com.users.repository.UserRepository;
+import com.users.response.CreateResponse;
+import com.users.response.UpdateResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
@@ -17,36 +20,47 @@ public class UserService {
 
 
 
-    public ResponseEntity<UserEntity> findByUserId(Long userId) {
+    public ResponseEntity findByUserId(Long userId) {
+
         Optional<UserEntity> userOpt = Optional.ofNullable(userRepository.findByUserId(userId));
 
         if(userOpt.isPresent()) {
             return ResponseEntity.ok(userOpt.get());
         } else {
-            return ResponseEntity.notFound().build();
+            return new ResponseEntity<>("User Not found.", HttpStatus.NOT_FOUND);
         }
     }
 
-    public ResponseEntity<UserEntity> createUser(UserEntity user) {
-        userRepository.saveUser(user);
+    public ResponseEntity createUser(UserEntity user) {
 
-        Optional<UserEntity> userOpt = Optional.ofNullable(userRepository.findByUserId(user.getUserId()));
-        if(userOpt.isPresent()) {
-            return ResponseEntity.ok(userOpt.get());
+        CreateResponse response = new CreateResponse();
+
+        Optional<Long> idUserCreated = Optional.ofNullable(userRepository.saveUser(user));
+
+        if(idUserCreated.isPresent()) {
+            response.setId(idUserCreated.get().toString());
+            response.setSucceeded(Boolean.TRUE);
+
         } else {
-            return ResponseEntity.notFound().build();
+            response.setId("");
+            response.setSucceeded(Boolean.FALSE);
         }
+        return ResponseEntity.ok(response);
     }
 
-    public ResponseEntity<UserEntity> updateUser(UserEntity user, Long idUser) {
-        userRepository.updateUser(user,idUser);
+    public ResponseEntity updateUser(UserEntity user, Long idUser) {
 
-        Optional<UserEntity> userOpt = Optional.ofNullable(userRepository.findByUserId(idUser));
-        if(userOpt.isPresent()) {
-            return ResponseEntity.ok(userOpt.get());
+        UpdateResponse response = new UpdateResponse();
+
+        Optional<Boolean> userUpdated = Optional.ofNullable(userRepository.updateUser(user,idUser));
+
+        if(userUpdated.isPresent()) {
+            response.setSucceeded(Boolean.TRUE);
         } else {
-            return ResponseEntity.notFound().build();
+            response.setSucceeded(Boolean.FALSE);
         }
+
+        return ResponseEntity.ok(response);
     }
 
     public String helloService() {
