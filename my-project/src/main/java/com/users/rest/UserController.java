@@ -40,30 +40,4 @@ public class UserController {
         ResponseEntity response = userService.updateUser(user,userId);
         return response;
     }
-
-    private String SerializeJson(Object myObject) { return ""; }
-
-    private Object DeserializeJson (String json) { return new Object(); }
-
-
-
-    @GetMapping("hello-my-project")
-    public String hello() throws Exception {
-
-        UserEntity newUser = new UserEntity();
-        //newUser.setUserId(7L);
-        newUser.setFirstName("nombre7");
-        newUser.setLastName("apellido7");
-        newUser.setEmailAddress("valor7@correo.com");
-
-        // userRepository.save(newUser);
-
-        //userRepository.findAll();
-        //userRepository.findByUserId(3L);
-        //System.out.println(":::::::::::::::: " + userRepository.saveUser(newUser));
-        //userRepository.updateUser(newUser,7L);
-
-
-        return "My-project User works!!!!!";
-    }
 }

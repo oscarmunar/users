@@ -17,9 +17,7 @@ public class UserService {
 
     @Autowired
     private UserRepository userRepository;
-
-
-
+    
     public ResponseEntity findByUserId(Long userId) {
 
         Optional<UserEntity> userOpt = Optional.ofNullable(userRepository.findByUserId(userId));
@@ -62,9 +60,4 @@ public class UserService {
 
         return ResponseEntity.ok(response);
     }
-
-    public String helloService() {
-        return "Service ::::::: My-project User works!!!!! " + userRepository.findById(1L) + " :::::::::";
-    }
-
 }
